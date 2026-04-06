@@ -2,294 +2,193 @@ package cookbook;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 
 public class LoginScreen {
 
-    static Color darkGreen = new Color(14, 71, 17);
-    static Color formBackground = new Color(255, 255, 255, 245); 
-
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> createAndShowGUI());
-    }
-
-    private static void createAndShowGUI() {
         JFrame frame = new JFrame("Dirk's CookBook");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(390, 844); 
         frame.setLayout(null); 
-        frame.setResizable(false);
         frame.setLocationRelativeTo(null); 
 
-        JLayeredPane layeredPane = new JLayeredPane();
-        layeredPane.setBounds(0, 0, 390, 844);
-        frame.add(layeredPane);
+        Color darkGreen = new Color(14, 71, 17);
 
-        // --- LAYER 1: Background Image ---
-        String backgroundFilename = "BackgroundImage_LoginScreen.jpg";
-        try {
-            final ImageIcon bgIcon = new ImageIcon(backgroundFilename);
-            if (bgIcon.getIconWidth() != -1) {
-                JPanel backgroundPanel = new JPanel() {
-                    @Override
-                    protected void paintComponent(Graphics g) {
-                        super.paintComponent(g);
-                        g.drawImage(bgIcon.getImage(), 0, 0, 390, 844, this);
-                    }
-                };
-                backgroundPanel.setBounds(0, 0, 390, 844);
-                layeredPane.add(backgroundPanel, JLayeredPane.DEFAULT_LAYER);
-            } else {
-                frame.getContentPane().setBackground(new Color(220, 220, 220));
-            }
-        } catch (Exception e) {
-            System.out.println("❌ Error loading background.");
-        }
-
-        // --- LAYER 2: UI Controls ---
-        JPanel uiControlsContainer = new JPanel();
-        uiControlsContainer.setBounds(0, 0, 390, 844);
-        uiControlsContainer.setOpaque(false); 
-        uiControlsContainer.setLayout(null); 
-        layeredPane.add(uiControlsContainer, JLayeredPane.PALETTE_LAYER); 
-
+        // 1. Top Navigation Bar
         JPanel topBar = new JPanel();
         topBar.setBounds(0, 0, 390, 100);
         topBar.setBackground(Color.WHITE);
         topBar.setLayout(null);
 
         JLabel menuIcon = new JLabel("≡");
-        menuIcon.setFont(new Font("Public Sans", Font.BOLD, 30));
+        menuIcon.setFont(new Font("SansSerif", Font.BOLD, 30));
         menuIcon.setForeground(darkGreen);
         menuIcon.setBounds(20, 40, 40, 40);
         topBar.add(menuIcon);
 
-        // Perfectly centered titles using SwingConstants.CENTER
-        JLabel titleLabel1 = new JLabel("Dirk's");
-        titleLabel1.setFont(new Font("Public Sans", Font.PLAIN, 28));
-        titleLabel1.setForeground(darkGreen);
-        titleLabel1.setBounds(0, 25, 390, 35); 
-        titleLabel1.setHorizontalAlignment(SwingConstants.CENTER);
-        
-        JLabel titleLabel2 = new JLabel("CookBook");
-        titleLabel2.setFont(new Font("Public Sans", Font.PLAIN, 28));
-        titleLabel2.setForeground(darkGreen);
-        titleLabel2.setBounds(0, 55, 390, 35); 
-        titleLabel2.setHorizontalAlignment(SwingConstants.CENTER);
+        JLabel title1 = new JLabel("Dirk's", SwingConstants.CENTER);
+        title1.setFont(new Font("SansSerif", Font.PLAIN, 28));
+        title1.setForeground(darkGreen);
+        title1.setBounds(0, 25, 390, 35);
+        topBar.add(title1);
 
-        topBar.add(titleLabel1);
-        topBar.add(titleLabel2);
-        uiControlsContainer.add(topBar);
+        JLabel title2 = new JLabel("CookBook", SwingConstants.CENTER);
+        title2.setFont(new Font("SansSerif", Font.PLAIN, 28));
+        title2.setForeground(darkGreen);
+        title2.setBounds(0, 55, 390, 35);
+        topBar.add(title2);
 
-        // Adjusted X coordinate to 37 for perfect centering
-        RoundedPanel formCardPanel = new RoundedPanel(20, formBackground);
-        formCardPanel.setBounds(37, 280, 300, 160);
-        formCardPanel.setLayout(null);
+        frame.add(topBar);
 
-        PlaceholderTextField usernameField = new PlaceholderTextField("Username", 10);
+        // 2. The Form Card 
+        RoundPanel formCard = new RoundPanel();
+        formCard.setBounds(37, 280, 300, 160);
+        formCard.setLayout(null);
+
+        // Username Field (Now uses professional placeholder!)
+        RoundTextField usernameField = new RoundTextField("Username");
         usernameField.setBounds(20, 20, 260, 40);
-        usernameField.setForeground(Color.BLACK); 
-        usernameField.setFont(new Font("Public Sans", Font.PLAIN, 14));
-        formCardPanel.add(usernameField);
+        usernameField.setForeground(Color.BLACK); // Real text will be black
+        formCard.add(usernameField);
 
-        PlaceholderPasswordField passwordField = new PlaceholderPasswordField("Password", 10);
+        // Password Field (Now uses professional placeholder!)
+        RoundPasswordField passwordField = new RoundPasswordField("Password");
         passwordField.setBounds(20, 75, 260, 40);
-        passwordField.setForeground(Color.BLACK); 
-        passwordField.setFont(new Font("Public Sans", Font.PLAIN, 14));
-        formCardPanel.add(passwordField);
-
-        JLabel eyeIcon = new JLabel("👁️");
-        eyeIcon.setFont(new Font("Public Sans", Font.PLAIN, 18));
-        eyeIcon.setForeground(darkGreen);
-        eyeIcon.setBounds(255, 85, 25, 20); 
-        formCardPanel.add(eyeIcon);
+        passwordField.setForeground(Color.BLACK); // Real text will be black
+        formCard.add(passwordField);
 
         JLabel forgotPass = new JLabel("<html><u>Forgot Password?</u></html>");
-        forgotPass.setFont(new Font("Public Sans", Font.PLAIN, 10));
+        forgotPass.setFont(new Font("SansSerif", Font.PLAIN, 10));
         forgotPass.setForeground(darkGreen);
         forgotPass.setBounds(185, 120, 100, 20);
-        formCardPanel.add(forgotPass);
+        formCard.add(forgotPass);
 
-        uiControlsContainer.add(formCardPanel);
+        frame.add(formCard);
 
-        // 3. Login Button (Adjusted X coordinate to 37)
-        RoundedButton loginButton = new RoundedButton("LOGIN", 45);
+        // 3. Login Button (Animated)
+        AnimatedButton loginButton = new AnimatedButton("LOGIN");
         loginButton.setBounds(37, 460, 300, 45);
         loginButton.setBackground(darkGreen);
         loginButton.setForeground(Color.WHITE);
-        loginButton.setFont(new Font("Public Sans", Font.BOLD, 14));
-        uiControlsContainer.add(loginButton);
+        loginButton.setFont(new Font("SansSerif", Font.BOLD, 14));
+        frame.add(loginButton);
 
-        // Perfectly centered bottom text
-        JLabel signUpText = new JLabel("<html>New to Dirk's CookBook? <b>Create an account</b></html>");
-        signUpText.setFont(new Font("Public Sans", Font.PLAIN, 12));
+        // 4. Bottom Text
+        JLabel signUpText = new JLabel("<html>New to Dirk's CookBook? <b>Create an account</b></html>", SwingConstants.CENTER);
+        signUpText.setFont(new Font("SansSerif", Font.PLAIN, 12));
         signUpText.setForeground(darkGreen);
         signUpText.setBounds(0, 750, 390, 20);
-        signUpText.setHorizontalAlignment(SwingConstants.CENTER);
-        uiControlsContainer.add(signUpText);
+        frame.add(signUpText);
+
+        // 5. Background Image 
+        try {
+            ImageIcon bgIcon = new ImageIcon("BackgroundImage_LoginScreen.jpg");
+            Image scaledImage = bgIcon.getImage().getScaledInstance(390, 844, Image.SCALE_SMOOTH);
+            JLabel backgroundLabel = new JLabel(new ImageIcon(scaledImage));
+            backgroundLabel.setBounds(0, 0, 390, 844);
+            frame.add(backgroundLabel);
+        } catch (Exception e) {
+            System.out.println("Could not load image.");
+        }
 
         frame.setVisible(true);
     }
 
     // =====================================================================
-    // CUSTOM CLASSES FOR ROUNDED SHAPES & ANIMATIONS
+    // THE "KEEP IT SIMPLE" CUSTOM SHAPES
     // =====================================================================
 
-    static class RoundedPanel extends JPanel {
-        private int radius;
-        private Color bgColor;
-
-        public RoundedPanel(int radius, Color bgColor) {
-            this.radius = radius;
-            this.bgColor = bgColor;
-            setOpaque(false); 
-        }
-
-        @Override
+    static class RoundPanel extends JPanel {
+        public RoundPanel() { setOpaque(false); }
         protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            Graphics2D g2 = (Graphics2D) g.create();
-            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g2.setColor(bgColor);
-            g2.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, radius, radius);
-            g2.dispose();
+            ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g.setColor(new Color(255, 255, 255, 245));
+            g.fillRoundRect(0, 0, getWidth()-1, getHeight()-1, 20, 20);
         }
     }
 
-    static class RoundedButton extends JButton {
-        private int radius;
-        private double currentScale = 1.0;
-        private double targetScale = 1.0;
-        private Timer animationTimer;
-
-        public RoundedButton(String text, int radius) {
-            super(text);
-            this.radius = radius;
-            setContentAreaFilled(false); 
-            setFocusPainted(false);      
-            setBorderPainted(false);     
-            setOpaque(false);
-
-            addMouseListener(new MouseAdapter() {
-                @Override
-                public void mousePressed(MouseEvent e) {
-                    targetScale = 0.92; 
-                    startAnimation();
-                }
-
-                @Override
-                public void mouseReleased(MouseEvent e) {
-                    targetScale = 1.0;  
-                    startAnimation();
-                }
-            });
-        }
-
-        private void startAnimation() {
-            if (animationTimer != null && animationTimer.isRunning()) {
-                animationTimer.stop();
-            }
-            animationTimer = new Timer(10, e -> {
-                currentScale += (targetScale - currentScale) * 0.3; 
-                
-                if (Math.abs(currentScale - targetScale) < 0.001) {
-                    currentScale = targetScale;
-                    ((Timer) e.getSource()).stop();
-                }
-                repaint(); 
-            });
-            animationTimer.start();
-        }
-
-        @Override
-        protected void paintComponent(Graphics g) {
-            Graphics2D g2 = (Graphics2D) g.create();
-            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-            int centerX = getWidth() / 2;
-            int centerY = getHeight() / 2;
-
-            g2.translate(centerX, centerY);
-            g2.scale(currentScale, currentScale);
-            g2.translate(-centerX, -centerY);
-
-            g2.setColor(getBackground());
-            g2.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, radius, radius);
-            
-            super.paintComponent(g2); 
-            
-            g2.dispose();
-        }
-    }
-
-    static class PlaceholderTextField extends JTextField {
+    // Upgraded: Rounded text field that draws the gray placeholder if empty
+    static class RoundTextField extends JTextField {
         private String placeholder;
-        private int radius;
-
-        public PlaceholderTextField(String placeholder, int radius) {
-            this.placeholder = placeholder;
-            this.radius = radius;
+        
+        public RoundTextField(String placeholder) { 
+            this.placeholder = placeholder; 
             setOpaque(false); 
-            setBackground(Color.WHITE);
-            setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 15)); 
+            setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10)); 
         }
-
-        @Override
+        
         protected void paintComponent(Graphics g) {
-            Graphics2D g2 = (Graphics2D) g.create();
+            Graphics2D g2 = (Graphics2D) g;
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             
-            g2.setColor(getBackground());
-            g2.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, radius, radius);
+            // Draw the white box and green border
+            g.setColor(Color.WHITE);
+            g.fillRoundRect(0, 0, getWidth()-1, getHeight()-1, 10, 10);
+            g.setColor(new Color(14, 71, 17)); 
+            g.drawRoundRect(0, 0, getWidth()-1, getHeight()-1, 10, 10);
             
-            g2.setColor(darkGreen);
-            g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, radius, radius);
-            
+            // Draw the actual user text
             super.paintComponent(g);
-
+            
+            // Draw the gray placeholder ONLY if the user hasn't typed anything yet
             if (getText().isEmpty()) {
-                g2.setColor(Color.GRAY);
-                FontMetrics fm = g2.getFontMetrics();
-                int y = (getHeight() - fm.getHeight()) / 2 + fm.getAscent();
-                g2.drawString(placeholder, getInsets().left, y);
+                g.setColor(Color.GRAY);
+                int y = (getHeight() - g.getFontMetrics().getHeight()) / 2 + g.getFontMetrics().getAscent();
+                g.drawString(placeholder, getInsets().left, y);
             }
-            g2.dispose();
         }
     }
 
-    static class PlaceholderPasswordField extends JPasswordField {
+    // Upgraded: Rounded password field that draws the gray placeholder if empty
+    static class RoundPasswordField extends JPasswordField {
         private String placeholder;
-        private int radius;
-
-        public PlaceholderPasswordField(String placeholder, int radius) {
-            this.placeholder = placeholder;
-            this.radius = radius;
-            setOpaque(false);
-            setBackground(Color.WHITE);
-            setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 45)); 
+        
+        public RoundPasswordField(String placeholder) { 
+            this.placeholder = placeholder; 
+            setOpaque(false); 
+            setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 45)); 
         }
-
-        @Override
+        
         protected void paintComponent(Graphics g) {
-            Graphics2D g2 = (Graphics2D) g.create();
+            Graphics2D g2 = (Graphics2D) g;
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             
-            g2.setColor(getBackground());
-            g2.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, radius, radius);
+            // Draw the white box and green border
+            g.setColor(Color.WHITE);
+            g.fillRoundRect(0, 0, getWidth()-1, getHeight()-1, 10, 10);
+            g.setColor(new Color(14, 71, 17)); 
+            g.drawRoundRect(0, 0, getWidth()-1, getHeight()-1, 10, 10);
             
-            g2.setColor(darkGreen);
-            g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, radius, radius);
-            
+            // Draw the actual user text
             super.paintComponent(g);
-
+            
+            // Draw the gray placeholder ONLY if the user hasn't typed a password yet
             if (getPassword().length == 0) {
-                g2.setColor(Color.GRAY);
-                FontMetrics fm = g2.getFontMetrics();
-                int y = (getHeight() - fm.getHeight()) / 2 + fm.getAscent();
-                g2.drawString(placeholder, getInsets().left, y);
+                g.setColor(Color.GRAY);
+                int y = (getHeight() - g.getFontMetrics().getHeight()) / 2 + g.getFontMetrics().getAscent();
+                g.drawString(placeholder, getInsets().left, y);
             }
-            g2.dispose();
+        }
+    }
+
+    static class AnimatedButton extends JButton {
+        int shrink = 0; 
+        public AnimatedButton(String text) {
+            super(text); setContentAreaFilled(false); setBorderPainted(false); setFocusPainted(false);
+            addMouseListener(new MouseAdapter() {
+                public void mousePressed(MouseEvent e) { shrink = 2; repaint(); } 
+                public void mouseReleased(MouseEvent e) { shrink = 0; repaint(); } 
+            });
+        }
+        protected void paintComponent(Graphics g) {
+            Graphics2D g2 = (Graphics2D) g;
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            if (shrink > 0) g2.translate(shrink, shrink);
+            g.setColor(getBackground());
+            g.fillRoundRect(0, 0, getWidth()-1-(shrink*2), getHeight()-1-(shrink*2), 40, 40);
+            super.paintComponent(g);
+            if (shrink > 0) g2.translate(-shrink, -shrink);
         }
     }
 }
