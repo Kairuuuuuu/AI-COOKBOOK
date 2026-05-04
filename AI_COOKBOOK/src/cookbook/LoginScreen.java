@@ -10,12 +10,27 @@ public class LoginScreen {
         JFrame frame = new JFrame("Dirk's CookBook");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(390, 844); 
-        frame.setLayout(null); 
         frame.setLocationRelativeTo(null); 
+
+        // 🌟 BULLETPROOF BACKGROUND
+        JPanel mainContent = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                try {
+                    ImageIcon bgIcon = new ImageIcon("BackgroundImage_LoginScreen.png");
+                    if (bgIcon.getIconWidth() == -1) bgIcon = new ImageIcon("BackgroundImage_LoginScreen.jpg");
+                    if (bgIcon.getIconWidth() != -1) {
+                        g.drawImage(bgIcon.getImage(), 0, 0, getWidth(), getHeight(), this);
+                    }
+                } catch (Exception e) {}
+            }
+        };
+        mainContent.setLayout(null);
+        frame.setContentPane(mainContent);
 
         Color darkGreen = new Color(14, 71, 17);
 
-        // 1. Top Navigation Bar
         JPanel topBar = new JPanel();
         topBar.setBounds(0, 0, 390, 100);
         topBar.setBackground(Color.WHITE);
@@ -41,21 +56,18 @@ public class LoginScreen {
 
         frame.add(topBar);
 
-        // 2. The Form Card 
         RoundPanel formCard = new RoundPanel();
         formCard.setBounds(37, 280, 300, 160);
         formCard.setLayout(null);
 
-        // Username Field (Now uses professional placeholder!)
         RoundTextField usernameField = new RoundTextField("Username");
         usernameField.setBounds(20, 20, 260, 40);
-        usernameField.setForeground(Color.BLACK); // Real text will be black
+        usernameField.setForeground(Color.BLACK); 
         formCard.add(usernameField);
 
-        // Password Field (Now uses professional placeholder!)
         RoundPasswordField passwordField = new RoundPasswordField("Password");
         passwordField.setBounds(20, 75, 260, 40);
-        passwordField.setForeground(Color.BLACK); // Real text will be black
+        passwordField.setForeground(Color.BLACK); 
         formCard.add(passwordField);
 
         JLabel forgotPass = new JLabel("<html><u>Forgot Password?</u></html>");
@@ -66,7 +78,6 @@ public class LoginScreen {
 
         frame.add(formCard);
 
-        // 3. Login Button (Animated)
         AnimatedButton loginButton = new AnimatedButton("LOGIN");
         loginButton.setBounds(37, 460, 300, 45);
         loginButton.setBackground(darkGreen);
@@ -75,31 +86,18 @@ public class LoginScreen {
         frame.add(loginButton);
         
         loginButton.addActionListener(e -> {
-            frame.dispose(); // This permanently closes the Login window
-            MainMenu.showMenu(); // This opens the new Main Menu window!
+            frame.dispose(); 
+            MainMenu.showMenu(); 
         });
 
-        // 4. Bottom Text
         JLabel signUpText = new JLabel("<html>New to Dirk's CookBook? <b>Create an account</b></html>", SwingConstants.CENTER);
         signUpText.setFont(new Font("SansSerif", Font.PLAIN, 12));
         signUpText.setForeground(darkGreen);
         signUpText.setBounds(0, 750, 390, 20);
         frame.add(signUpText);
 
-        // 5. Background Image 
-        try {
-            ImageIcon bgIcon = new ImageIcon("BackgroundImage_LoginScreen.jpg");
-            Image scaledImage = bgIcon.getImage().getScaledInstance(390, 844, Image.SCALE_SMOOTH);
-            JLabel backgroundLabel = new JLabel(new ImageIcon(scaledImage));
-            backgroundLabel.setBounds(0, 0, 390, 844);
-            frame.add(backgroundLabel);
-        } catch (Exception e) {
-            System.out.println("Could not load image.");
-        }
-
         frame.setVisible(true);
     }
-
 
     static class RoundPanel extends JPanel {
         public RoundPanel() { setOpaque(false); }
@@ -110,30 +108,17 @@ public class LoginScreen {
         }
     }
 
-    // Upgraded: Rounded text field that draws the gray placeholder if empty
     static class RoundTextField extends JTextField {
         private String placeholder;
-        
         public RoundTextField(String placeholder) { 
-            this.placeholder = placeholder; 
-            setOpaque(false); 
-            setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10)); 
+            this.placeholder = placeholder; setOpaque(false); setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10)); 
         }
-        
         protected void paintComponent(Graphics g) {
             Graphics2D g2 = (Graphics2D) g;
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            
-            // Draw the white box and green border
-            g.setColor(Color.WHITE);
-            g.fillRoundRect(0, 0, getWidth()-1, getHeight()-1, 10, 10);
-            g.setColor(new Color(14, 71, 17)); 
-            g.drawRoundRect(0, 0, getWidth()-1, getHeight()-1, 10, 10);
-            
-            // Draw the actual user text
+            g.setColor(Color.WHITE); g.fillRoundRect(0, 0, getWidth()-1, getHeight()-1, 10, 10);
+            g.setColor(new Color(14, 71, 17)); g.drawRoundRect(0, 0, getWidth()-1, getHeight()-1, 10, 10);
             super.paintComponent(g);
-            
-            // Draw the gray placeholder ONLY if the user hasn't typed anything yet
             if (getText().isEmpty()) {
                 g.setColor(Color.GRAY);
                 int y = (getHeight() - g.getFontMetrics().getHeight()) / 2 + g.getFontMetrics().getAscent();
@@ -142,30 +127,17 @@ public class LoginScreen {
         }
     }
 
-    // Upgraded: Rounded password field that draws the gray placeholder if empty
     static class RoundPasswordField extends JPasswordField {
         private String placeholder;
-        
         public RoundPasswordField(String placeholder) { 
-            this.placeholder = placeholder; 
-            setOpaque(false); 
-            setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 45)); 
+            this.placeholder = placeholder; setOpaque(false); setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 45)); 
         }
-        
         protected void paintComponent(Graphics g) {
             Graphics2D g2 = (Graphics2D) g;
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            
-            // Draw the white box and green border
-            g.setColor(Color.WHITE);
-            g.fillRoundRect(0, 0, getWidth()-1, getHeight()-1, 10, 10);
-            g.setColor(new Color(14, 71, 17)); 
-            g.drawRoundRect(0, 0, getWidth()-1, getHeight()-1, 10, 10);
-            
-            // Draw the actual user text
+            g.setColor(Color.WHITE); g.fillRoundRect(0, 0, getWidth()-1, getHeight()-1, 10, 10);
+            g.setColor(new Color(14, 71, 17)); g.drawRoundRect(0, 0, getWidth()-1, getHeight()-1, 10, 10);
             super.paintComponent(g);
-            
-            // Draw the gray placeholder ONLY if the user hasn't typed a password yet
             if (getPassword().length == 0) {
                 g.setColor(Color.GRAY);
                 int y = (getHeight() - g.getFontMetrics().getHeight()) / 2 + g.getFontMetrics().getAscent();
