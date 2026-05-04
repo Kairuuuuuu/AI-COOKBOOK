@@ -17,22 +17,35 @@ public class MainMenu {
         Color darkGreen = new Color(14, 71, 17);
 
         // ==========================================
-        // ✨ FIX: The Layered Pane to control depth
+        // 1. HEAVY-DUTY GLASS PANE (For the dark popup effect)
+        // ==========================================
+        JPanel glassPane = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                g.setColor(new Color(0, 0, 0, 150)); 
+                g.fillRect(0, 0, getWidth(), getHeight());
+                super.paintComponent(g);
+            }
+        };
+        glassPane.setOpaque(false);
+        glassPane.setLayout(null);
+        frame.setGlassPane(glassPane);
+
+        // ==========================================
+        // 2. LAYERS (Keeps UI on top of Background)
         // ==========================================
         JLayeredPane layeredPane = new JLayeredPane();
         layeredPane.setBounds(0, 0, 390, 844);
         frame.add(layeredPane);
 
-        // We put all your buttons and cards in this transparent container
         JPanel uiContainer = new JPanel();
         uiContainer.setBounds(0, 0, 390, 844);
         uiContainer.setOpaque(false);
         uiContainer.setLayout(null);
-        // Put the UI on the very top layer
         layeredPane.add(uiContainer, JLayeredPane.MODAL_LAYER); 
 
         // ==========================================
-        // 1. TOP NAVIGATION BAR
+        // 3. TOP NAVIGATION BAR
         // ==========================================
         JPanel topBar = new JPanel();
         topBar.setBounds(0, 0, 390, 100);
@@ -57,49 +70,53 @@ public class MainMenu {
         title2.setBounds(0, 55, 390, 35);
         topBar.add(title2);
 
+        // THE DOLLAR ICON TRIGGER
         RoundDollarIcon dollarIcon = new RoundDollarIcon();
         dollarIcon.setBounds(330, 45, 30, 30);
+        dollarIcon.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        dollarIcon.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                // Dim screen -> Open Popup -> Brighten screen
+                frame.getGlassPane().setVisible(true);
+                frame.getGlassPane().repaint();
+                AddBudget.showBudgetMenu(frame); 
+                frame.getGlassPane().setVisible(false);
+            }
+        });
         topBar.add(dollarIcon);
 
         uiContainer.add(topBar);
 
         // ==========================================
-        // 2. CARD 1: GENERATE AI MEAL
+        // 4. CARDS (Generate, Suggested, Shopping)
         // ==========================================
         RoundPanel card1 = new RoundPanel();
         card1.setBounds(25, 120, 325, 120);
         card1.setLayout(null);
-
         JLabel genText1 = new JLabel("Generate Your Next Meal,");
         genText1.setFont(new Font("SansSerif", Font.BOLD, 16));
         genText1.setForeground(darkGreen);
         genText1.setBounds(20, 15, 300, 20);
         card1.add(genText1);
-        
         JLabel genText2 = new JLabel("Let AI decide.");
         genText2.setFont(new Font("SansSerif", Font.BOLD, 16));
         genText2.setForeground(darkGreen);
         genText2.setBounds(20, 35, 300, 20);
         card1.add(genText2);
-
         AnimatedButton genButton = new AnimatedButton("Generate from My Pantry  📖", true);
         genButton.setBounds(20, 65, 285, 40);
         card1.add(genButton);
-
         uiContainer.add(card1);
 
-        // ==========================================
-        // 3. CARD 2: SUGGESTED FOR YOU
-        // ==========================================
         RoundPanel card2 = new RoundPanel();
         card2.setBounds(25, 255, 325, 185);
         card2.setLayout(null);
-
         JLabel suggText = new JLabel("Suggested For You");
         suggText.setFont(new Font("SansSerif", Font.PLAIN, 16));
         suggText.setBounds(15, 15, 200, 20);
         card2.add(suggText);
-
+        
         RoundImagePanel food1 = new RoundImagePanel("food1.jpg");
         food1.setBounds(15, 45, 90, 80);
         card2.add(food1);
@@ -135,44 +152,34 @@ public class MainMenu {
         f3Cal.setFont(new Font("SansSerif", Font.PLAIN, 9));
         f3Cal.setBounds(220, 145, 90, 15);
         card2.add(f3Cal);
-
         uiContainer.add(card2);
 
-        // ==========================================
-        // 4. CARD 3: SHOPPING LIST
-        // ==========================================
         RoundPanel card3 = new RoundPanel();
         card3.setBounds(25, 455, 325, 160);
         card3.setLayout(null);
-
         JLabel shopTitle = new JLabel("🛒 Shopping List");
         shopTitle.setFont(new Font("SansSerif", Font.PLAIN, 18));
         shopTitle.setForeground(darkGreen);
         shopTitle.setBounds(20, 15, 200, 25);
         card3.add(shopTitle);
-
         JLabel shopLine1 = new JLabel("Selected Meal: Thai Green Curry");
         shopLine1.setFont(new Font("SansSerif", Font.PLAIN, 12));
         shopLine1.setBounds(20, 45, 280, 15);
         card3.add(shopLine1);
-
         JLabel shopLine2 = new JLabel("Missing: Coconut Milk, Thai Chilies");
         shopLine2.setFont(new Font("SansSerif", Font.PLAIN, 12));
         shopLine2.setBounds(20, 65, 280, 15);
         card3.add(shopLine2);
-
         JLabel shopLine3 = new JLabel("Budget: [=====Php 300=====]");
         shopLine3.setFont(new Font("SansSerif", Font.PLAIN, 12));
         shopLine3.setBounds(20, 85, 280, 15);
         card3.add(shopLine3);
-
         AnimatedButton viewListBtn = new AnimatedButton("View Full List", false); 
         viewListBtn.setBounds(20, 115, 285, 30);
         card3.add(viewListBtn);
-
         uiContainer.add(card3);
 
-     // ==========================================
+        // ==========================================
         // 5. BOTTOM NAVIGATION BAR 
         // ==========================================
         JPanel bottomNav = new JPanel();
@@ -186,8 +193,6 @@ public class MainMenu {
 
         NavItem pantryTab = new NavItem("📋", "My Pantry", false); 
         pantryTab.setBounds(165, 10, 60, 60);
-        
-        // ✨ THE FIX: Listen for a click, close Main Menu, open Pantry!
         pantryTab.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
                 frame.dispose(); 
@@ -203,19 +208,15 @@ public class MainMenu {
         uiContainer.add(bottomNav);
 
         // ==========================================
-        // 6. BACKGROUND & OVERLAY (Fixed Layering)
+        // 6. BACKGROUND & OVERLAY
         // ==========================================
-        
-        // Middle Layer: The white fade overlay
         JPanel fadeOverlay = new JPanel();
         fadeOverlay.setBounds(0, 0, 390, 844);
         fadeOverlay.setBackground(new Color(245, 245, 245, 120)); 
         layeredPane.add(fadeOverlay, JLayeredPane.PALETTE_LAYER);
 
-        // Bottom Layer: The actual image using the bulletproof painting trick
-        String backgroundFilename = "BackgroundImage_LoginScreen.png";
         try {
-            final ImageIcon bgIcon = new ImageIcon(backgroundFilename);
+            final ImageIcon bgIcon = new ImageIcon("BackgroundImage_LoginScreen.png");
             if (bgIcon.getIconWidth() != -1) {
                 JPanel backgroundPanel = new JPanel() {
                     @Override
@@ -225,20 +226,18 @@ public class MainMenu {
                     }
                 };
                 backgroundPanel.setBounds(0, 0, 390, 844);
-                layeredPane.add(backgroundPanel, JLayeredPane.DEFAULT_LAYER); // Add to absolute bottom!
+                layeredPane.add(backgroundPanel, JLayeredPane.DEFAULT_LAYER); 
             }
-        } catch (Exception e) {
-            System.out.println("Could not load background image.");
-        }
+        } catch (Exception e) {}
 
         frame.setVisible(true);
     }
 
     // =====================================================================
-    // REUSABLE SIMPLE CUSTOM SHAPES
+    // REUSABLE COMPONENTS
     // =====================================================================
 
-    static class NavItem extends JPanel {
+    public static class NavItem extends JPanel {
         boolean isActive;
         public NavItem(String iconText, String titleText, boolean isActive) {
             this.isActive = isActive;
@@ -267,7 +266,7 @@ public class MainMenu {
         }
     }
 
-    static class RoundPanel extends JPanel {
+    public static class RoundPanel extends JPanel {
         public RoundPanel() { setOpaque(false); }
         protected void paintComponent(Graphics g) {
             ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -276,9 +275,11 @@ public class MainMenu {
         }
     }
 
-    static class RoundDollarIcon extends JPanel {
+    public static class RoundDollarIcon extends JPanel {
         public RoundDollarIcon() { setOpaque(false); }
+        @Override
         protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
             Graphics2D g2 = (Graphics2D) g;
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g2.setColor(new Color(14, 71, 17));
@@ -289,28 +290,30 @@ public class MainMenu {
         }
     }
 
-    static class RoundImagePanel extends JPanel {
-        Image image;
-        public RoundImagePanel(String imagePath) {
-            setOpaque(false);
-            try { 
-                ImageIcon icon = new ImageIcon(imagePath);
-                if (icon.getIconWidth() != -1) image = icon.getImage();
-            } catch (Exception e) {}
+    public static class RoundTextField extends JTextField {
+        private String placeholder;
+        public RoundTextField(String placeholder) { 
+            this.placeholder = placeholder; 
+            setOpaque(false); 
+            setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10)); 
         }
         protected void paintComponent(Graphics g) {
             Graphics2D g2 = (Graphics2D) g;
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g2.setColor(Color.LIGHT_GRAY);
-            g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
-            if (image != null) {
-                g2.setClip(new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), 15, 15));
-                g2.drawImage(image, 0, 0, getWidth(), getHeight(), this);
+            g.setColor(Color.WHITE);
+            g.fillRoundRect(0, 0, getWidth()-1, getHeight()-1, 15, 15);
+            g.setColor(new Color(14, 71, 17)); 
+            g.drawRoundRect(0, 0, getWidth()-1, getHeight()-1, 15, 15);
+            super.paintComponent(g);
+            if (getText().isEmpty()) {
+                g.setColor(Color.GRAY);
+                int y = (getHeight() - g.getFontMetrics().getHeight()) / 2 + g.getFontMetrics().getAscent();
+                g.drawString(placeholder, getInsets().left, y);
             }
         }
     }
 
-    static class AnimatedButton extends JButton {
+    public static class AnimatedButton extends JButton {
         int shrink = 0; 
         boolean isSolid;
         public AnimatedButton(String text, boolean isSolid) {
@@ -339,6 +342,27 @@ public class MainMenu {
             }
             super.paintComponent(g);
             if (shrink > 0) g2.translate(-shrink, -shrink);
+        }
+    }
+
+    public static class RoundImagePanel extends JPanel {
+        Image image;
+        public RoundImagePanel(String imagePath) {
+            setOpaque(false);
+            try { 
+                ImageIcon icon = new ImageIcon(imagePath);
+                if (icon.getIconWidth() != -1) image = icon.getImage();
+            } catch (Exception e) {}
+        }
+        protected void paintComponent(Graphics g) {
+            Graphics2D g2 = (Graphics2D) g;
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setColor(Color.LIGHT_GRAY);
+            g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
+            if (image != null) {
+                g2.setClip(new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), 15, 15));
+                g2.drawImage(image, 0, 0, getWidth(), getHeight(), this);
+            }
         }
     }
 }
