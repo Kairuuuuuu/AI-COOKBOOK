@@ -1,6 +1,9 @@
 package cookbook;
 
 import javax.swing.*;
+
+import cookbook.MainMenu.RoundDollarIcon;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.RoundRectangle2D;
@@ -67,6 +70,21 @@ public class PantryScreen {
 
         RoundDollarIcon dollarIcon = new RoundDollarIcon();
         dollarIcon.setBounds(330, 45, 30, 30);
+        dollarIcon.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        dollarIcon.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                // 1. Show the darkening effect
+                frame.getGlassPane().setVisible(true);
+                
+                // 2. Show the separate AddBudget popup
+                AddBudget.showBudgetMenu(frame); 
+                
+                // 3. Hide the darkening effect after the popup is closed
+                frame.getGlassPane().setVisible(false);
+            }
+        });
         topBar.add(dollarIcon);
 
         uiContainer.add(topBar);
