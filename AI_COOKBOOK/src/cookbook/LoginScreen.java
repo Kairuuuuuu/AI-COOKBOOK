@@ -100,9 +100,6 @@ public class LoginScreen {
         frame.setVisible(true);
     }
 
-    // =====================================================================
-    // THE "KEEP IT SIMPLE" CUSTOM SHAPES
-    // =====================================================================
 
     static class RoundPanel extends JPanel {
         public RoundPanel() { setOpaque(false); }
