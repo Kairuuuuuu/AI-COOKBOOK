@@ -73,6 +73,11 @@ public class LoginScreen {
         loginButton.setForeground(Color.WHITE);
         loginButton.setFont(new Font("SansSerif", Font.BOLD, 14));
         frame.add(loginButton);
+        
+        loginButton.addActionListener(e -> {
+            frame.dispose(); // This permanently closes the Login window
+            MainMenu.showMenu(); // This opens the new Main Menu window!
+        });
 
         // 4. Bottom Text
         JLabel signUpText = new JLabel("<html>New to Dirk's CookBook? <b>Create an account</b></html>", SwingConstants.CENTER);
