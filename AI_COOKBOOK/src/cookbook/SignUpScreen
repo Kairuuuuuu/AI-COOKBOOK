@@ -1,0 +1,145 @@
+package cookbook;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class SignUpScreen {
+
+    public static void showScreen() {
+        JFrame frame = new JFrame("Dirk's CookBook - Sign Up");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(390, 844); 
+        frame.setLocationRelativeTo(null); 
+
+        // BACKGROUND
+        JPanel mainContent = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                try {
+                    ImageIcon bgIcon = new ImageIcon("BackgroundImage_LoginScreen.png");
+                    if (bgIcon.getIconWidth() == -1) bgIcon = new ImageIcon("BackgroundImage_LoginScreen.jpg");
+                    if (bgIcon.getIconWidth() != -1) {
+                        g.drawImage(bgIcon.getImage(), 0, 0, getWidth(), getHeight(), this);
+                    }
+                } catch (Exception e) {}
+            }
+        };
+        mainContent.setLayout(null);
+        frame.setContentPane(mainContent);
+
+        Color darkGreen = new Color(14, 71, 17);
+
+        // TOP BAR
+        JPanel topBar = new JPanel();
+        topBar.setBounds(0, 0, 390, 100);
+        topBar.setBackground(Color.WHITE);
+        topBar.setLayout(null);
+
+
+        JLabel title1 = new JLabel("Dirk's", SwingConstants.CENTER);
+        title1.setFont(new Font("SansSerif", Font.PLAIN, 28));
+        title1.setForeground(darkGreen);
+        title1.setBounds(0, 25, 390, 35);
+        topBar.add(title1);
+
+        JLabel title2 = new JLabel("CookBook", SwingConstants.CENTER);
+        title2.setFont(new Font("SansSerif", Font.PLAIN, 28));
+        title2.setForeground(darkGreen);
+        title2.setBounds(0, 55, 390, 35);
+        topBar.add(title2);
+
+        frame.add(topBar);
+
+        // FORM CARD (Made taller to fit 3 fields)
+        LoginScreen.RoundPanel formCard = new LoginScreen.RoundPanel();
+        formCard.setBounds(37, 220, 300, 200); // Taller than the previous screens
+        formCard.setLayout(null);
+
+        // 1. Username Field
+        LoginScreen.RoundTextField usernameField = new LoginScreen.RoundTextField("Username");
+        usernameField.setBounds(20, 20, 260, 40);
+        usernameField.setForeground(Color.BLACK); 
+        formCard.add(usernameField);
+
+        // 2. Password Field
+        LoginScreen.RoundPasswordField passwordField = new LoginScreen.RoundPasswordField("Password");
+        passwordField.setBounds(20, 75, 260, 40);
+        passwordField.setForeground(Color.BLACK); 
+        formCard.add(passwordField);
+
+        // Password Eye Toggle
+        JLabel passEye = new JLabel("👁");
+        passEye.setBounds(250, 75, 30, 40);
+        passEye.setForeground(darkGreen);
+        passEye.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        formCard.add(passEye);
+        formCard.setComponentZOrder(passEye, 0); // Keeps eye on top of the text field
+
+        // 3. Confirm Password Field
+        LoginScreen.RoundPasswordField confirmPasswordField = new LoginScreen.RoundPasswordField("Confirm Password");
+        confirmPasswordField.setBounds(20, 130, 260, 40);
+        confirmPasswordField.setForeground(Color.BLACK); 
+        formCard.add(confirmPasswordField);
+
+        // Confirm Password Eye Toggle
+        JLabel confirmEye = new JLabel("👁");
+        confirmEye.setBounds(250, 130, 30, 40);
+        confirmEye.setForeground(darkGreen);
+        confirmEye.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        formCard.add(confirmEye);
+        formCard.setComponentZOrder(confirmEye, 0); // Keeps eye on top
+
+        frame.add(formCard);
+
+        // SIGN UP BUTTON
+        LoginScreen.AnimatedButton signUpBtn = new LoginScreen.AnimatedButton("SIGN UP");
+        signUpBtn.setBounds(37, 440, 300, 45);
+        signUpBtn.setBackground(darkGreen);
+        signUpBtn.setForeground(Color.WHITE);
+        signUpBtn.setFont(new Font("SansSerif", Font.BOLD, 14));
+        frame.add(signUpBtn);
+        
+        // ACTION: Finish Sign Up and go to Login Page
+        signUpBtn.addActionListener(e -> {
+            JOptionPane.showMessageDialog(frame, "Account Created Successfully!"); // Nice little popup!
+            frame.dispose(); 
+            LoginScreen.main(new String[0]); // Returns to the start
+        });
+
+        // FOOTER
+        JLabel loginText = new JLabel("<html>Already have an account? <b>Log in</b></html>", SwingConstants.CENTER);
+        loginText.setFont(new Font("SansSerif", Font.PLAIN, 12));
+        loginText.setForeground(darkGreen);
+        loginText.setBounds(0, 750, 390, 20);
+        loginText.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        
+        // ACTION: Go back to Login Screen manually
+        loginText.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent e) {
+                frame.dispose();
+                LoginScreen.main(new String[0]);
+            }
+        });
+        frame.add(loginText);
+
+        passEye.addMouseListener(new MouseAdapter() {
+            boolean isVisible = false;
+            public void mousePressed(MouseEvent e) {
+                isVisible = !isVisible;
+                passwordField.setEchoChar(isVisible ? (char)0 : '•');
+            }
+        });
+
+        confirmEye.addMouseListener(new MouseAdapter() {
+            boolean isVisible = false;
+            public void mousePressed(MouseEvent e) {
+                isVisible = !isVisible;
+                confirmPasswordField.setEchoChar(isVisible ? (char)0 : '•');
+            }
+        });
+
+        frame.setVisible(true);
+    }
+}
