@@ -36,12 +36,6 @@ public class LoginScreen {
         topBar.setBackground(Color.WHITE);
         topBar.setLayout(null);
 
-        JLabel menuIcon = new JLabel("≡");
-        menuIcon.setFont(new Font("SansSerif", Font.BOLD, 30));
-        menuIcon.setForeground(darkGreen);
-        menuIcon.setBounds(20, 40, 40, 40);
-        topBar.add(menuIcon);
-
         JLabel title1 = new JLabel("Dirk's", SwingConstants.CENTER);
         title1.setFont(new Font("SansSerif", Font.PLAIN, 28));
         title1.setForeground(darkGreen);
@@ -70,11 +64,21 @@ public class LoginScreen {
         passwordField.setForeground(Color.BLACK); 
         formCard.add(passwordField);
 
-        JLabel forgotPass = new JLabel("<html><u>Forgot Password?</u></html>");
+        // --- FORGOT PASSWORD LINK ---
+        JLabel forgotPass = new JLabel("<html><u>Forgot Password?</u></html>"); // Fixed typo!
         forgotPass.setFont(new Font("SansSerif", Font.PLAIN, 10));
         forgotPass.setForeground(darkGreen);
         forgotPass.setBounds(185, 120, 100, 20);
-        formCard.add(forgotPass);
+        forgotPass.setCursor(new Cursor(Cursor.HAND_CURSOR)); // Added the pointer finger!
+        
+        forgotPass.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent e) {
+                frame.dispose();
+                // We pass TRUE because this is the Forgot Password path
+                EnterEmailScreen.showScreen(true); 
+            }
+        });
+        formCard.add(forgotPass); // Put this inside the formCard!
 
         frame.add(formCard);
 
@@ -89,16 +93,27 @@ public class LoginScreen {
             frame.dispose(); 
             MainMenu.showMenu(); 
         });
-
+        
+        // --- SIGN UP LINK ---
         JLabel signUpText = new JLabel("<html>New to Dirk's CookBook? <b>Create an account</b></html>", SwingConstants.CENTER);
         signUpText.setFont(new Font("SansSerif", Font.PLAIN, 12));
         signUpText.setForeground(darkGreen);
         signUpText.setBounds(0, 750, 390, 20);
+        signUpText.setCursor(new Cursor(Cursor.HAND_CURSOR)); 
+
+        signUpText.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent e) {
+                frame.dispose(); 
+             
+                EnterEmailScreen.showScreen(false); 
+            }
+        });
         frame.add(signUpText);
 
         frame.setVisible(true);
     }
 
+    // ... (Keep your RoundPanel, RoundTextField, RoundPasswordField, and AnimatedButton classes exactly as they are down here) ...
     static class RoundPanel extends JPanel {
         public RoundPanel() { setOpaque(false); }
         protected void paintComponent(Graphics g) {
