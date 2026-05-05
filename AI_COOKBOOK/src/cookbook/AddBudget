@@ -57,7 +57,7 @@ public class AddBudget {
         budgetLabel.setBounds(20, 105, 100, 30);
         popupPanel.add(budgetLabel);
 
-        MainMenu.RoundTextField budgetField = new MainMenu.RoundTextField("Php 350");
+        MainMenu.RoundTextField budgetField = new MainMenu.RoundTextField("Enter Budget");
         budgetField.setBounds(120, 105, 150, 35);
         popupPanel.add(budgetField);
 
