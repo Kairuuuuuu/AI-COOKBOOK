@@ -1,0 +1,125 @@
+package cookbook;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class VerificationCodeScreen {
+	
+	public static void showScreen(boolean isForgotPassword) {
+		JFrame frame = new JFrame("Dirk's CookBook");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(390, 844); 
+        frame.setLocationRelativeTo(null); 
+
+        // 🌟 BULLETPROOF BACKGROUND
+        JPanel mainContent = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                try {
+                    ImageIcon bgIcon = new ImageIcon("BackgroundImage_LoginScreen.png");
+                    if (bgIcon.getIconWidth() == -1) bgIcon = new ImageIcon("BackgroundImage_LoginScreen.jpg");
+                    if (bgIcon.getIconWidth() != -1) {
+                        g.drawImage(bgIcon.getImage(), 0, 0, getWidth(), getHeight(), this);
+                    }
+                } catch (Exception e) {}
+            }
+        };
+        mainContent.setLayout(null);
+        frame.setContentPane(mainContent);
+
+        Color darkGreen = new Color(14, 71, 17);
+
+        JPanel topBar = new JPanel();
+        topBar.setBounds(0, 0, 390, 100);
+        topBar.setBackground(Color.WHITE);
+        topBar.setLayout(null);
+
+        JLabel title1 = new JLabel("Dirk's", SwingConstants.CENTER);
+        title1.setFont(new Font("SansSerif", Font.PLAIN, 28));
+        title1.setForeground(darkGreen);
+        title1.setBounds(0, 25, 390, 35);
+        topBar.add(title1);
+
+        JLabel title2 = new JLabel("CookBook", SwingConstants.CENTER);
+        title2.setFont(new Font("SansSerif", Font.PLAIN, 28));
+        title2.setForeground(darkGreen);
+        title2.setBounds(0, 55, 390, 35);
+        topBar.add(title2);
+
+        frame.add(topBar);
+        
+        LoginScreen.RoundPanel formCard = new LoginScreen.RoundPanel();
+        formCard.setBounds(37,280,300,150);
+        formCard.setLayout(null);
+        
+        JLabel verificationHeader1 = new JLabel("Enter the", SwingConstants.LEFT);
+        verificationHeader1.setFont(new Font("Reddit Sans", Font.BOLD, 18));
+        verificationHeader1.setForeground(darkGreen);
+        verificationHeader1.setBounds(20, 20, 280, 25);
+        formCard.add(verificationHeader1);
+        
+        JLabel verificationHeader2 = new JLabel ("Verification Code", SwingConstants.LEFT);
+        verificationHeader2.setFont(new Font("Reddit Sans", Font.BOLD, 18));
+        verificationHeader2.setForeground(darkGreen);
+        verificationHeader2.setBounds(20, 45, 280, 35);
+        formCard.add(verificationHeader2);
+        
+        LoginScreen.RoundTextField verificationField = new LoginScreen.RoundTextField("Enter Code");
+        verificationField.setBounds(20, 85, 260, 40);
+        verificationField.setForeground(Color.BLACK);
+        formCard.add(verificationField);
+        
+        frame.add(formCard); // Make sure this stays above the buttons!
+        
+        LoginScreen.AnimatedButton nextButton = new LoginScreen.AnimatedButton("NEXT");
+        nextButton.setBounds (37, 450, 300, 45);
+        nextButton.setBackground(darkGreen);
+        nextButton.setForeground(Color.WHITE);
+        nextButton.setFont(new Font("SansSerif", Font.BOLD, 14));
+        frame.add(nextButton);
+        
+        // 🌟 CHANGE 1: The Traffic Cop logic for the NEXT button
+        nextButton.addActionListener(e -> {
+        	frame.dispose();
+            if (isForgotPassword) {
+                ForgotPasswordScreen.showScreen();
+            } else {
+                
+        	    SignUpScreen.showScreen(); // (Make sure this matches the exact name of your sign up class)
+            }
+        });
+        
+        JLabel loginText = new JLabel("<html>Already have an account? <b>Log in</b></html>", SwingConstants.CENTER);
+        loginText.setFont(new Font("SansSerif", Font.PLAIN, 12));
+        loginText.setForeground(darkGreen);
+        loginText.setBounds(0, 750, 390, 20);
+        loginText.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        
+        loginText.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent e) {
+                frame.dispose();
+                LoginScreen.main(new String[0]);
+            }
+        });
+        frame.add(loginText);
+        
+        JLabel backToEmailScreen = new JLabel("← Back");
+        backToEmailScreen.setFont(new Font("SansSerif", Font.BOLD, 15));
+        backToEmailScreen.setForeground(darkGreen);
+        backToEmailScreen.setBounds(10,106,390,20);
+        backToEmailScreen.setCursor(new Cursor(Cursor.HAND_CURSOR)); // Added hand cursor here too so users know it's clickable!
+       
+        backToEmailScreen.addMouseListener(new MouseAdapter() {
+        	public void mousePressed(MouseEvent e) {
+        		frame.dispose();
+                // 🌟 CHANGE 2: Fixed the typo! Passed the full variable name back.
+        		EnterEmailScreen.showScreen(isForgotPassword);
+        	}
+        });
+        frame.add(backToEmailScreen);
+
+        frame.setVisible(true);
+	}
+}
