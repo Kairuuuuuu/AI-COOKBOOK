@@ -8,6 +8,11 @@ import java.awt.geom.RoundRectangle2D;
 public class MainMenu {
 
     public static JFrame frame;
+    public static JLabel missingLabel; 
+    
+    // 🌟 This variable stores the state so it doesn't reset when leaving the screen!
+    // It will only reset when you completely close and restart the Java program.
+    public static String savedMissingIngredients = "Missing:  Coconut Milk, Thai Chilies";
 
     public static void showMenu() {
         frame = new JFrame("Dirk's CookBook - Main Menu");
@@ -132,6 +137,43 @@ public class MainMenu {
 
         frame.add(card2);
 
+        // 🌟 Shopping List Card
+        RoundPanel card3 = new RoundPanel();
+        card3.setBounds(25, 455, 325, 170); 
+        card3.setLayout(null);
+
+        JLabel shopTitle = new JLabel("🛒 Shopping List");
+        shopTitle.setFont(new Font("SansSerif", Font.PLAIN, 18));
+        shopTitle.setForeground(darkGreen);
+        shopTitle.setBounds(15, 15, 200, 25);
+        card3.add(shopTitle);
+
+        JLabel mealLabel = new JLabel("Selected Meal: Thai Green Curry");
+        mealLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        mealLabel.setForeground(Color.BLACK);
+        mealLabel.setBounds(15, 50, 300, 20);
+        card3.add(mealLabel);
+
+        // 🌟 LOAD THE SAVED STATE: We use savedMissingIngredients here!
+        missingLabel = new JLabel(savedMissingIngredients);
+        missingLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        missingLabel.setForeground(Color.BLACK);
+        missingLabel.setBounds(15, 75, 300, 20);
+        card3.add(missingLabel);
+
+        JLabel budgetLabel = new JLabel("Budget: [=====Php 300=====]");
+        budgetLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        budgetLabel.setForeground(Color.BLACK);
+        budgetLabel.setBounds(15, 100, 300, 20);
+        card3.add(budgetLabel);
+
+        AnimatedButton viewListBtn = new AnimatedButton("View Full List", false);
+        viewListBtn.setBounds(20, 130, 285, 30);
+        viewListBtn.addActionListener(e -> ShoppingList.showShoppingList(frame));
+        card3.add(viewListBtn);
+
+        frame.add(card3);
+
         JPanel bottomNav = new JPanel();
         bottomNav.setBounds(0, 720, 390, 90);
         bottomNav.setBackground(darkGreen);
@@ -141,22 +183,28 @@ public class MainMenu {
         homeTab.setBounds(45, 10, 60, 60);
         bottomNav.add(homeTab);
 
+        // 🌟 Reverted to original navigation style
         NavItem pantryTab = new NavItem("📋", "My Pantry", false); 
         pantryTab.setBounds(165, 10, 60, 60);
         pantryTab.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
-                Point loc = frame.getLocation(); frame.dispose(); 
-                PantryScreen.showPantry(); PantryScreen.frame.setLocation(loc); 
+                Point loc = frame.getLocation(); 
+                frame.dispose(); 
+                PantryScreen.showPantry(); 
+                PantryScreen.frame.setLocation(loc); 
             }
         });
         bottomNav.add(pantryTab);
 
+        // 🌟 Reverted to original navigation style
         NavItem chatTab = new NavItem("💬", "AI Chat", false);
         chatTab.setBounds(280, 10, 60, 60);
         chatTab.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
-                Point loc = frame.getLocation(); frame.dispose(); 
-                ChatScreen.showChat(); ChatScreen.frame.setLocation(loc); 
+                Point loc = frame.getLocation(); 
+                frame.dispose(); 
+                ChatScreen.showChat(); 
+                ChatScreen.frame.setLocation(loc); 
             }
         });
         bottomNav.add(chatTab);
